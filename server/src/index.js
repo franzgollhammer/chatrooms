@@ -6,6 +6,7 @@ const cors = require('cors');
 const socketio = require('socket.io');
 const router = require('./router');
 const { notFound, errorHandler } = require('./middlewares')
+const { addUser, removeUser, getUser, getUsersInRoom } = require('./userHelper');
 
 // Constants
 const PORT = process.env.PORT || 1337;
@@ -18,8 +19,23 @@ io.on('connection', socket => {
     console.log('New connection !');
 
     socket.on('join', ({ username, chatroom }, callback) => {
-        console.log(username, chatroom);
+        const { error, user } = addUser({ id: socket.id, username, chatroom });
 
+        if (error) return callback(error);
+
+        socket.emit('serverMessage', { user: 'admin', message: `${user.username}, welcome to the room ${user.chatroom} 🎉` });
+        socket.broadcast.to(user.chatroom).emit('serverMessage', { user: 'admin', message: `${user.username} has joined the room! 🧐`});
+
+
+        socket.join(user.chatroom);
+    })
+
+    socket.on('userMessage', (message, callback) => {
+        const user = getUser(socket.id);
+
+        io.to(user.chatroom).emit('serverMessage', { user: user.username, message });
+
+        callback();
     })
 
     socket.on('disconnect', () => {

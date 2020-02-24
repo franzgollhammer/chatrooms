@@ -2,7 +2,7 @@
   <v-container light-green--text text--accent-2>
     <v-row justify-center>
       <v-col class="text-center pa-5 ma-4">
-        <h1 class="font-italic display-3">CHATROOMS</h1>
+        <h1 class="bungee-shade">CHATROOMS</h1>
         <br />
         <p class="pt-5">Enter a chatroom!</p>
         <v-form class>
@@ -43,5 +43,9 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.bungee-shade {
+  font-family: 'Bungee Shade';
+  font-size: 3rem;
+}
 </style>
