@@ -1,11 +1,26 @@
 const express = require('express');
+const http = require('http');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const cors = require('cors');
-const { notFound, errorHandler} = require('./middlewares')
+const socketio = require('socket.io');
+const router = require('./router');
+const { notFound, errorHandler } = require('./middlewares')
+
+// Constants
+const PORT = process.env.PORT || 1337;
 
 const app = express();
-const PORT = process.env.PORT || 1337;
+const server = http.Server(app);
+const io = socketio(server);
+
+io.on('connection', socket => {
+    console.log('New connection !')
+
+    socket.on('disconnect', () => {
+        console.log('User has left!');
+    })
+})
 
 /**
  * Middlewares:
@@ -22,10 +37,11 @@ app.use(morgan('common'));
 app.use(helmet());
 app.use(cors({
     origin: 'http://localhost:8080'
-}))
-app.use(notFound())
-app.use(errorHandler())
+}));
+app.use(router);
+app.use(notFound);
+app.use(errorHandler);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server up ⬆️  and runnig on port: ${PORT}`);
 })
