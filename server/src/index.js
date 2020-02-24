@@ -17,6 +17,11 @@ const io = socketio(server);
 io.on('connection', socket => {
     console.log('New connection !');
 
+    socket.on('join', ({ username, chatroom }, callback) => {
+        console.log(username, chatroom);
+
+    })
+
     socket.on('disconnect', () => {
         console.log('User has left!');
     })
@@ -36,7 +41,7 @@ io.on('connection', socket => {
 app.use(morgan('common'));
 app.use(helmet());
 app.use(cors({
-    origin: "http://localhost:8080"
+    origin: process.env.CORS_ORIGIN || "http://localhost:8080"
 }));
 app.use(router);
 app.use(notFound);

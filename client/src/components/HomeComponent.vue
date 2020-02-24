@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import chatService from '@/services/ChatService'
 export default {
   data() {
     return {
@@ -30,25 +29,16 @@ export default {
     }
   },
   methods: {
-    async joinChat() {
-      try {
-        await chatService.joinChat({
-          username: this.username,
-          chatroom: this.chatroom,
-        })
+    joinChat() {
+      if (this.username && this.chatroom) {
         this.$router.push({
           name: 'Chat',
           query: { username: this.username, chatroom: this.chatroom },
         })
-      } catch (err) {
-        console.error(err)
-        this.$router.push({
-          name: 'Chat',
-          query: { username: this.username, chatroom: this.chatroom },
-        })
+      } else {
+        this.$router.push({ name: 'Home' })
       }
     },
-    navigateToChatroom() {},
   },
 }
 </script>

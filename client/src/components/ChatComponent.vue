@@ -9,9 +9,26 @@
 </template>
 
 <script>
+import io from 'socket.io-client'
+const HOST = 'http://localhost:1337/'
 export default {
+  data() {
+    return {
+      query: {
+        username: this.$route.query.username,
+        chatroom: this.$route.query.chatroom,
+      },
+      socket: io(HOST),
+    }
+  },
   mounted() {
-    console.log(this.$route)
+    this.socket.emit('join', this.query, error => {
+      console.log(error)
+    })
+  },
+  beforeDestroy() {
+    this.socket.emit('disconnect')
+    this.socket.off()
   },
 }
 </script>
