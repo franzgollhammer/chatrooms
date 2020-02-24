@@ -15,7 +15,7 @@ const server = http.Server(app);
 const io = socketio(server);
 
 io.on('connection', socket => {
-    console.log('New connection !')
+    console.log('New connection !');
 
     socket.on('disconnect', () => {
         console.log('User has left!');
@@ -36,7 +36,7 @@ io.on('connection', socket => {
 app.use(morgan('common'));
 app.use(helmet());
 app.use(cors({
-    origin: 'http://localhost:8080'
+    origin: "http://localhost:8080"
 }));
 app.use(router);
 app.use(notFound);
@@ -44,4 +44,4 @@ app.use(errorHandler);
 
 server.listen(PORT, () => {
     console.log(`Server up ⬆️  and runnig on port: ${PORT}`);
-})
+});
