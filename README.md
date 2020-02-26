@@ -2,6 +2,8 @@
 
 ## Simple chat room app with Vue 🖖 and Express 🚀
 
+## https://chatrooms-fg.netlify.com/
+
 ### Server setup
 
 ```
