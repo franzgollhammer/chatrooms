@@ -49,9 +49,9 @@ io.on('connection', socket => {
         socket.emit('serverMessage', { user: 'admin', message: `${user.username}, welcome to the room ${user.chatroom} 👋` });
         // Broadcast message to all other users in the room that a user has joined
         socket.broadcast.to(user.chatroom).emit('serverMessage', { user: 'admin', message: `🟢 ${user.username} has joined the room!` });
-
         // Join the chatroom
         socket.join(user.chatroom);
+        io.to(user.chatroom).emit('roomData', { chatroom: user.chatroom , users: getUsersInRoom(user.chatroom) });
     })
 
     // On leaving a chatroom
@@ -60,6 +60,7 @@ io.on('connection', socket => {
         
         if (user) {
             io.to(user.chatroom).emit('serverMessage', { user: 'admin', message: `🔴 ${user.username} has left the room!`})
+            io.to(user.chatroom).emit('roomData', { chatroom: user.chatroom , users: getUsersInRoom(user.chatroom) });
         }
     })
 
@@ -69,6 +70,7 @@ io.on('connection', socket => {
         console.log('user: ', user);
         console.log('message: ', message);
         io.to(user.chatroom).emit('serverMessage', { user: user.username, message: message });
+        io.to(user.chatroom).emit('roomData', { chatroom: user.chatroom , users: getUsersInRoom(user.chatroom) });
 
         callback();
     })

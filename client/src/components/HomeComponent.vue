@@ -4,7 +4,7 @@
       <v-col class="text-center pa-5 ma-4">
         <h1 class="bungee-shade">CHATROOMS</h1>
         <br />
-        <!-- <p class="pt-5">Enter a chatroom!</p> -->
+        <p v-if="userExistsError" class="pt-5 red--text">Username is already taken!</p>
         <v-form class>
           <v-text-field v-model="username" dark color="light-green accent-2" label="Username"></v-text-field>
           <v-text-field v-model="chatroom" dark color="light-green accent-2" label="Chatroom"></v-text-field>
@@ -21,23 +21,30 @@
 </template>
 
 <script>
+import axios from 'axios'
+const SERVER_BASE_URL = process.env.SERVER_BASE_URL || 'http://localhost:1337'
 export default {
   data() {
     return {
       username: '',
-      chatroom: '',
+      chatroom: 'General',
+      userExistsError: false,
     }
   },
   methods: {
     // Join the chatroom
-    joinChat() {
+    joinChat: async function() {
       if (this.username && this.chatroom) {
-        this.$router.push({
-          name: 'Chat',
-          query: { username: this.username, chatroom: this.chatroom },
-        })
-      } else {
-        this.$router.push({ name: 'Home' })
+        // Check if username already exists
+        const userExists = await axios.get(`${SERVER_BASE_URL}/${this.chatroom}/${this.username}`)
+        if (userExists.data) {
+          this.userExistsError = true
+        } else {
+          this.$router.push({
+            name: 'Chat',
+            query: { username: this.username, chatroom: this.chatroom },
+          })
+        }
       }
     },
   },
@@ -47,6 +54,6 @@ export default {
 <style scoped>
 .bungee-shade {
   font-family: 'Bungee Shade';
-  font-size: 3rem;
+  font-size: 2rem;
 }
 </style>

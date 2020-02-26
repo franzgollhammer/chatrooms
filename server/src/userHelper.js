@@ -61,9 +61,23 @@ const getUser = id => users.find(user => user.id === id);
  */
 const getUsersInRoom = chatroom => users.filter(user => user.chatroom === chatroom);
 
+/**
+ * Checks if a user with the given username already exists in given chatroom
+ * @param {User} userData User: { chatroom: '', username: ''}
+ * @return {User} if user exists
+ * @return {null} if user doesnt exist
+ */
+const checkUserExists = ({ chatroom, username }) => {
+    username = username.trim().toLowerCase();
+    chatroom = chatroom.trim().toLowerCase();
+
+    return users.find(user =>  user.chatroom === chatroom && user.username === username);
+}
+
 module.exports = {
     addUser,
     removeUser,
     getUser,
-    getUsersInRoom
+    getUsersInRoom,
+    checkUserExists
 }
