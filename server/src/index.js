@@ -28,9 +28,7 @@ const io = socketio(server);
 
 app.use(morgan('common'));
 app.use(helmet());
-app.use(cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:8080"
-}));
+app.use(cors());
 app.use(router);
 app.use(notFound);
 app.use(errorHandler);
