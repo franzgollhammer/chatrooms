@@ -16,7 +16,7 @@ const users = [];
  * @param username - client username
  * @param chatroom - chatroom name
  * @returns {error} - if username already exists else,
- * @returns {null} - and adds the user to the userlist
+ * @returns {user} - and adds the user to the userlist
  */
 const addUser = ({ id, username, chatroom }) => {
     username = username.trim().toLowerCase();
@@ -26,17 +26,15 @@ const addUser = ({ id, username, chatroom }) => {
         return user.chatroom === chatroom && user.username === username
     });
 
-    // check if username already exists
-    existingUser !== null ? { error: 'Username is already taken!' } : null;
-
     const user = { id, username, chatroom };
+    // check if username already exists
+    if (existingUser) {
+        return { error: 'Username already exists' }
+    }
 
     users.push(user);
-
-    //console.log('userHelper: users: ', users);
-
+    console.log('addUser: users: ', users)
     return { user };
-
 }
 
 /**
@@ -45,7 +43,8 @@ const addUser = ({ id, username, chatroom }) => {
  */
 const removeUser = id => {
     const idx = users.findIndex((user) => user.id === id);
-    idx !== -1 ? users.splice(idx, 1)[0] : null;
+    return idx !== -1 ? users.splice(idx, 1)[0] : null;
+    
 }
 
 /**

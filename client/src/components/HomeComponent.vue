@@ -4,7 +4,7 @@
       <v-col class="text-center pa-5 ma-4">
         <h1 class="bungee-shade">CHATROOMS</h1>
         <br />
-        <p class="pt-5">Enter a chatroom!</p>
+        <!-- <p class="pt-5">Enter a chatroom!</p> -->
         <v-form class>
           <v-text-field v-model="username" dark color="light-green accent-2" label="Username"></v-text-field>
           <v-text-field v-model="chatroom" dark color="light-green accent-2" label="Chatroom"></v-text-field>

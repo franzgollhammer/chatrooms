@@ -47,12 +47,17 @@ export default {
   methods: {
     joinChatroom() {
       this.socket.emit('join', this.userData, error => {
-      console.log('error:', error)
+      if (error) {
+        this.$router.push({
+          name: 'Home',
+          query: { error: 'userExists'}
+        })
+      }
       })
     },
     leaveChatroom() {
-      this.socket.emit('disconnect')
-      this.socket.off()
+      this.socket.emit('leave')
+      this.socket.close()
       this.$router.push({ name: 'Home' })
     },
     sendMessage() {      
@@ -67,14 +72,11 @@ export default {
     
     this.socket.on('serverMessage', (message) => {
       this.messages.push(message)
-      // console.log('message: ', message)
-      console.log('messages :', this.messages)
     })
   },
   beforeDestroy() {
-    // Send disconnect event to server and close socket
-    this.socket.emit('disconnect')
-    this.socket.off()
+    this.socket.emit('leave')
+    this.socket.close()
   },
 }
 </script>

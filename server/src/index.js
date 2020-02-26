@@ -13,17 +13,7 @@ const PORT = process.env.PORT || 1337;
 
 const app = express();
 const server = http.Server(app);
-const io = socketio(server, {
-    handlePreflightRequest: (req, res) => {
-        const headers = {
-            "Access-Control-Allow-Headers": "Content-Type, Authorization",
-            "Access-Control-Allow-Origin": req.headers.origin, //or the specific origin you want to give access to,
-            "Access-Control-Allow-Credentials": true
-        };
-        res.writeHead(200, headers);
-        res.end();
-    }
-});
+const io = socketio(server);
 
 /**
  * Middlewares:
@@ -45,9 +35,10 @@ app.use(router);
 app.use(notFound);
 app.use(errorHandler);
 
+
 //                               ========== SOCKET ==========
 io.on('connection', socket => {
-    // On Joining a chatroom
+    // On leaving a chatroom
     socket.on('join', ({ username, chatroom }, callback) => {
         const { error, user } = addUser({ id: socket.id, username, chatroom });
 
@@ -55,12 +46,21 @@ io.on('connection', socket => {
         if (error) return callback(error);
 
         // Send welcome message to the new connected client
-        socket.emit('serverMessage', { user: 'admin', message: `${user.username}, welcome to the room ${user.chatroom} 🎉` });
+        socket.emit('serverMessage', { user: 'admin', message: `${user.username}, welcome to the room ${user.chatroom} 👋` });
         // Broadcast message to all other users in the room that a user has joined
-        socket.broadcast.to(user.chatroom).emit('serverMessage', { user: 'admin', message: `${user.username} has joined the room! 🧐` });
+        socket.broadcast.to(user.chatroom).emit('serverMessage', { user: 'admin', message: `🟢 ${user.username} has joined the room!` });
 
         // Join the chatroom
         socket.join(user.chatroom);
+    })
+
+    // On leaving a chatroom
+    socket.on('leave', () => {
+        const user = removeUser(socket.id)
+        
+        if (user) {
+            io.to(user.chatroom).emit('serverMessage', { user: 'admin', message: `🔴 ${user.username} has left the room!`})
+        }
     })
 
     // On receiving a user message
@@ -75,7 +75,7 @@ io.on('connection', socket => {
 
     // On disconnect
     socket.on('disconnect', () => {
-        console.log('User has left!');
+        console.log('User has disconnected!');
     });
 })
 
