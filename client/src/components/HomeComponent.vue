@@ -29,6 +29,7 @@ export default {
     }
   },
   methods: {
+    // Join the chatroom
     joinChat() {
       if (this.username && this.chatroom) {
         this.$router.push({

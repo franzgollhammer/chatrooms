@@ -32,6 +32,11 @@ const addUser = ({ id, username, chatroom }) => {
     const user = { id, username, chatroom };
 
     users.push(user);
+
+    //console.log('userHelper: users: ', users);
+
+    return { user };
+
 }
 
 /**
