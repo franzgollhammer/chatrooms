@@ -1,6 +1,6 @@
 # CHATROOMS
 
-## Simple chat room app with Vue 🖖 and Express 🚀
+## Simple chat room app with Vue 🖖 and Express 🚀 and socket.io
 
 ## https://chatrooms-fg.netlify.com/
 
